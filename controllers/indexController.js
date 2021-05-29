@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 
 //////////////asyncawait
@@ -15,8 +16,10 @@ const user_register = async (req, res) => {
       return res
         .status(402)
         .json({ error: true, message: `${user} is already existed` });
-
-    const createdUser = await User.create({ user, pwd: pwd1 });
+    const createdUser = await User.create({
+      user,
+      pwd: bcrypt.hashSync(pwd1, 10),
+    });
     res
       .status(201)
       .json({ error: false, message: `${createdUser.user} has been created` });
@@ -47,7 +50,7 @@ const user_register2 = (req, res) => {
         .status(400)
         .json({ error: false, message: `${user} has already existed` });
 
-    User.create({ user, pwd: pwd1 }, (err, data) => {
+    User.create({ user, pwd: bcrypt.hashSync(pwd1, 10) }, (err, data) => {
       if (err)
         return res
           .status(400)
@@ -75,7 +78,7 @@ const user_register3 = (req, res) => {
           .status(400)
           .json({ error: true, message: `${user} has already existed` });
 
-      User.create({ user, pwd: pwd1 }).then(
+      User.create({ user, pwd: bcrypt.hashSync(pwd1, 10) }).then(
         res
           .status(201)
           .json({ error: false, message: `${user} has been created` })
