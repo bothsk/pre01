@@ -91,8 +91,28 @@ const user_register3 = (req, res) => {
     });
 };
 
+const user_login = async (req, res, next) => {
+  // Handle success
+  return res.status(200).json({
+    status: {
+      error: null,
+      message: `Username : ${req.user.user} has been logged in`,
+    },
+    user: req.user._id,
+  });
+};
+
+const user_failed = (err, req, res, next) => {
+  // Handle error
+  return res.status(401).json({
+    status: { error: true, message: `Incorrect username or password` },
+  });
+};
+
 module.exports = {
   user_register,
   user_register2,
   user_register3,
+  user_login,
+  user_failed,
 };
